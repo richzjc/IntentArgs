@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':annotation', ':comiler'
 rootProject.name='IntentArgs'
