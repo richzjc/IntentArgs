@@ -19,7 +19,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     @Parameter(name = "rich")
-    ArrayList<String> richzjc;
+    String[] richzjc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

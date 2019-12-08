@@ -1,9 +1,31 @@
 apply plugin: 'java-library'
+apply plugin: 'com.novoda.bintray-release' // must be applied after your artifact generating plugin (eg. java / com.android.library)
+
+publish {
+    userOrg = 'richzjc'
+    groupId = 'com.richzjc'
+    artifactId = 'intentArgs_compiler'
+    publishVersion = '1.0.0'
+    desc = '类似于Butterknife的形式获取Intent里面携带的参数'
+    website = 'https://github.com/novoda/bintray-release'
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.9.1'
+    }
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.squareup:javapoet:1.11.1'
     implementation project(':annotation')
+
     compileOnly 'com.google.auto.service:auto-service:1.0-rc6'
     annotationProcessor 'com.google.auto.service:auto-service:1.0-rc6'
 
