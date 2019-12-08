@@ -70,19 +70,29 @@ public class ParameterFactory {
         String finalValue = "t." + fieldName;
         // t.s = t.getIntent().
         String methodContent = finalValue + " = t.getIntent().";
-
+        messager.printMessage(Diagnostic.Kind.NOTE, "如何查看日志" + type);
         // TypeKind 枚举类型不包含String
         if (type == TypeKind.INT.ordinal()) {
             // t.s = t.getIntent().getIntExtra("age", t.age);
             methodContent += "getIntExtra($S, " + finalValue + ")";
         } else if (type == TypeKind.BOOLEAN.ordinal()) {
-            // t.s = t.getIntent().getBooleanExtra("isSuccess", t.age);
             methodContent += "getBooleanExtra($S, " + finalValue + ")";
-        } else {
-            // t.s = t.getIntent.getStringExtra("s");
-            if (typeMirror.toString().equalsIgnoreCase(Constants.STRING)) {
-                methodContent += "getStringExtra($S)";
-            }
+        } else if (type == TypeKind.BYTE.ordinal()) {
+            methodContent += "getByteExtra($S, " + finalValue + ")";
+        } else if (type == TypeKind.SHORT.ordinal()) {
+            methodContent += "getShortExtra($S, " + finalValue + ")";
+        } else if (type == TypeKind.LONG.ordinal()) {
+            methodContent += "getLongExtra($S, " + finalValue + ")";
+        } else if (type == TypeKind.CHAR.ordinal()) {
+            methodContent += "getCharExtra($S, " + finalValue + ")";
+        } else if (type == TypeKind.FLOAT.ordinal()) {
+            // t.s = t.getIntent().getBooleanExtra("isSuccess", t.age);
+            methodContent += "getFloatExtra($S, " + finalValue + ")";
+        } else if (type == TypeKind.ARRAY.ordinal()) {
+            messager.printMessage(Diagnostic.Kind.NOTE, "" + type);
+            methodContent = parseArray(typeMirror, methodContent);
+        } else if (typeMirror.toString().equalsIgnoreCase(Constants.STRING)) {
+            methodContent += "getStringExtra($S)";
         }
 
         // 健壮代码
@@ -90,8 +100,15 @@ public class ParameterFactory {
             // 添加最终拼接方法内容语句
             methodBuidler.addStatement(methodContent, annotationValue);
         } else {
-            messager.printMessage(Diagnostic.Kind.ERROR, "目前暂支持String、int、boolean传参");
+            messager.printMessage(Diagnostic.Kind.ERROR, "目前暂支持类型不包括" + typeMirror.toString());
         }
+    }
+
+    private String parseArray(TypeMirror typeMirror, String methodContent) {
+        if (typeMirror.toString().equalsIgnoreCase(Constants.STRING_ARRAY)) {
+            methodContent += "getStringArrayExtra($S)";
+        }
+        return methodContent;
     }
 
     public static class Builder {

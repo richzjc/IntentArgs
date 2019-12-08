@@ -17,4 +17,6 @@ public class Constants {
 
     // String全类名
     public static final String STRING = "java.lang.String";
+    public static final String STRING_ARRAY = "java.lang.String[]";
+
 }
