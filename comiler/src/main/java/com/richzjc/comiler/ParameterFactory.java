@@ -73,7 +73,6 @@ public class ParameterFactory {
         messager.printMessage(Diagnostic.Kind.NOTE, "如何查看日志" + type);
         // TypeKind 枚举类型不包含String
         if (type == TypeKind.INT.ordinal()) {
-            // t.s = t.getIntent().getIntExtra("age", t.age);
             methodContent += "getIntExtra($S, " + finalValue + ")";
         } else if (type == TypeKind.BOOLEAN.ordinal()) {
             methodContent += "getBooleanExtra($S, " + finalValue + ")";
@@ -86,10 +85,9 @@ public class ParameterFactory {
         } else if (type == TypeKind.CHAR.ordinal()) {
             methodContent += "getCharExtra($S, " + finalValue + ")";
         } else if (type == TypeKind.FLOAT.ordinal()) {
-            // t.s = t.getIntent().getBooleanExtra("isSuccess", t.age);
             methodContent += "getFloatExtra($S, " + finalValue + ")";
         } else if (type == TypeKind.ARRAY.ordinal()) {
-            messager.printMessage(Diagnostic.Kind.NOTE, "" + type);
+            messager.printMessage(Diagnostic.Kind.NOTE, "type = " + type + "; typeMIrror  = " + typeMirror.toString());
             methodContent = parseArray(typeMirror, methodContent);
         } else if (typeMirror.toString().equalsIgnoreCase(Constants.STRING)) {
             methodContent += "getStringExtra($S)";
@@ -107,6 +105,20 @@ public class ParameterFactory {
     private String parseArray(TypeMirror typeMirror, String methodContent) {
         if (typeMirror.toString().equalsIgnoreCase(Constants.STRING_ARRAY)) {
             methodContent += "getStringArrayExtra($S)";
+        }else if(typeMirror.toString().equalsIgnoreCase("int[]")){
+            methodContent += "getIntArrayExtra($S)";
+        }else if(typeMirror.toString().equalsIgnoreCase("float[]")){
+            methodContent += "getFloatArrayExtra($S)";
+        }else if(typeMirror.toString().equalsIgnoreCase("char[]")){
+            methodContent += "getCharArrayExtra($S)";
+        }else if(typeMirror.toString().equalsIgnoreCase("double[]")){
+            methodContent += "getDoubleArrayExtra($S)";
+        }else if(typeMirror.toString().equalsIgnoreCase("byte[]")){
+            methodContent += "getByteArrayExtra($S)";
+        }else if(typeMirror.toString().equalsIgnoreCase("short[]")){
+            methodContent += "getShortArrayExtra($S)";
+        }else if(typeMirror.toString().equalsIgnoreCase("boolean[]")){
+            methodContent += "getBooleanArrayExtra($S)";
         }
         return methodContent;
     }

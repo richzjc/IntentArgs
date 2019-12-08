@@ -19,7 +19,14 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     @Parameter(name = "rich")
-    String[] richzjc;
+    float[] richzjc;
+    @Parameter(name = "rich")
+    double[] db;
+    @Parameter(name = "rich")
+    char[] chara;
+    @Parameter(name = "rich")
+    byte[] bytea;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
