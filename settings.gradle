@@ -1,2 +1,1 @@
 include ':app', ':annotation', ':comiler', ':anotation_api'
-rootProject.name='IntentArgs'
