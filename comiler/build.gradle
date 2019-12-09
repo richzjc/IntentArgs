@@ -5,7 +5,7 @@ publish {
     userOrg = 'richzjc'
     groupId = 'com.richzjc'
     artifactId = 'intentArgs_compiler'
-    publishVersion = '1.0.0'
+    publishVersion = '1.0.1'
     desc = '类似于Butterknife的形式获取Intent里面携带的参数'
     website = 'https://github.com/novoda/bintray-release'
 }

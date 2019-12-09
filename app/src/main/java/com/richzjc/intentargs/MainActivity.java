@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.richzjc.annotation.Parameter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -18,14 +17,14 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Parameter(name = "rich")
-    float[] richzjc;
-    @Parameter(name = "rich")
-    double[] db;
-    @Parameter(name = "rich")
-    char[] chara;
-    @Parameter(name = "rich")
-    byte[] bytea;
+//    @Parameter(name = "rich")
+//    float[] richzjc;
+//    @Parameter(name = "rich")
+//    double[] db;
+//    @Parameter(name = "rich")
+//    char[] chara;
+//    @Parameter(name = "rich")
+//    byte[] bytea;
 
 
     @Override

@@ -5,7 +5,7 @@ publish {
     userOrg = 'richzjc'
     groupId = 'com.richzjc'
     artifactId = 'intentargs'
-    publishVersion = '1.0.0'
+    publishVersion = '1.0.1'
     desc = '类似于Butterknife的形式获取Intent里面携带的参数'
     website = 'https://github.com/novoda/bintray-release'
 }
@@ -43,7 +43,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
