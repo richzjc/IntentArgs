@@ -5,7 +5,7 @@ publish {
     userOrg = 'richzjc'
     groupId = 'com.richzjc'
     artifactId = 'intentargs'
-    publishVersion = '1.0.2'
+    publishVersion = '1.0.0'
     desc = '类似于Butterknife的形式获取Intent里面携带的参数'
     website = 'https://github.com/novoda/bintray-release'
 }
@@ -48,5 +48,5 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    api project(':annotation')
+    api 'com.richzjc:intentargs_annotation:1.0.0'
 }
