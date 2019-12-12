@@ -146,27 +146,27 @@ public class ParameterProcessor extends AbstractProcessor {
             messager.printMessage(Diagnostic.Kind.NOTE, "APT生成获取参数类文件：" +
                     className.packageName() + "." + finalClassName);
             messager.printMessage(Diagnostic.Kind.NOTE,
-                    " BOOLEAN = " +  TypeKind.BYTE.ordinal()
+                    " BOOLEAN = " +  TypeKind.BOOLEAN.ordinal()
                     + " BYTE = " + TypeKind.BYTE.ordinal()
-                    + " SHORT = " + TypeKind.BYTE.ordinal()
-                    + " INT = "  + TypeKind.BYTE.ordinal()
-                    + " LONG = " + TypeKind.BYTE.ordinal()
-                    + " CHAR = " + TypeKind.BYTE.ordinal()
-                    + " FLOAT = " + TypeKind.BYTE.ordinal()
-                    + " DOUBLE = " + TypeKind.BYTE.ordinal()
-                    + " VOID = " + TypeKind.BYTE.ordinal()
-                    + " NONE = " + TypeKind.BYTE.ordinal()
-                    + " NULL = " + TypeKind.BYTE.ordinal()
-                    + " ARRAY = " + TypeKind.BYTE.ordinal()
-                    + " DECLARED = " + TypeKind.BYTE.ordinal()
-                    + " ERROR = " + TypeKind.BYTE.ordinal()
-                    + " TYPEVAR = " + TypeKind.BYTE.ordinal()
-                    + " WILDCARD = " + TypeKind.BYTE.ordinal()
-                    + " PACKAGE = " + TypeKind.BYTE.ordinal()
-                    + " EXECUTABLE = " + TypeKind.BYTE.ordinal()
-                    + " OTHER = " + TypeKind.BYTE.ordinal()
-                    + " UNION = " + TypeKind.BYTE.ordinal()
-                    + " INTERSECTION = " +  TypeKind.BYTE.ordinal());
+                    + " SHORT = " + TypeKind.SHORT.ordinal()
+                    + " INT = "  + TypeKind.INT.ordinal()
+                    + " LONG = " + TypeKind.LONG.ordinal()
+                    + " CHAR = " + TypeKind.CHAR.ordinal()
+                    + " FLOAT = " + TypeKind.FLOAT.ordinal()
+                    + " DOUBLE = " + TypeKind.DOUBLE.ordinal()
+                    + " VOID = " + TypeKind.VOID.ordinal()
+                    + " NONE = " + TypeKind.NONE.ordinal()
+                    + " NULL = " + TypeKind.NULL.ordinal()
+                    + " ARRAY = " + TypeKind.ARRAY.ordinal()
+                    + " DECLARED = " + TypeKind.DECLARED.ordinal()
+                    + " ERROR = " + TypeKind.ERROR.ordinal()
+                    + " TYPEVAR = " + TypeKind.TYPEVAR.ordinal()
+                    + " WILDCARD = " + TypeKind.WILDCARD.ordinal()
+                    + " PACKAGE = " + TypeKind.PACKAGE.ordinal()
+                    + " EXECUTABLE = " + TypeKind.EXECUTABLE.ordinal()
+                    + " OTHER = " + TypeKind.OTHER.ordinal()
+                    + " UNION = " + TypeKind.UNION.ordinal()
+                    + " INTERSECTION = " +  TypeKind.INT.ordinal());
             // MainActivity$$Parameter
             JavaFile.builder(className.packageName(), // 包名
                     TypeSpec.classBuilder(finalClassName) // 类名

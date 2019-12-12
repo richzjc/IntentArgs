@@ -4,10 +4,10 @@ import androidx.fragment.app.Fragment;
 
 import com.richzjc.annotation.Parameter;
 
+import java.util.List;
+
 public class TestFragment extends Fragment {
 
-//    @Parameter
-//    int rich;
-//    @Parameter(name = "richzjc")
-//    String name;
+    @Parameter(name = "richzjc")
+    List<String> name;
 }
