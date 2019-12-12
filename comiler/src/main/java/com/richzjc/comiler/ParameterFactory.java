@@ -6,15 +6,21 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 
+import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
 public class ParameterFactory {
 
+    private Elements elementUtils;
+    private Types typeUtils;
     // MainActivity t = (MainActivity) target;
     private static final String CONTENT = "$T t = ($T)target";
 
@@ -30,6 +36,8 @@ public class ParameterFactory {
     private ParameterFactory(Builder builder) {
         this.messager = builder.messager;
         this.className = builder.className;
+        this.typeUtils = builder.typeUtils;
+        this.elementUtils = builder.elementUtils;
 
         // 通过方法参数体构建方法体：public void loadParameter(Object target) {
         methodBuidler = MethodSpec.methodBuilder(Constants.PARAMETER_METHOD_NAME)
@@ -69,7 +77,7 @@ public class ParameterFactory {
         // 最终拼接的前缀：
         String finalValue = "t." + fieldName;
         // t.s = t.getIntent().
-        String methodContent = finalValue + " = t.getIntent().";
+        String methodContent = getMethodContent(element, finalValue);
         messager.printMessage(Diagnostic.Kind.NOTE, "如何查看日志" + type);
         // TypeKind 枚举类型不包含String
         if (type == TypeKind.INT.ordinal()) {
@@ -102,6 +110,30 @@ public class ParameterFactory {
         }
     }
 
+    private String getMethodContent(Element element, String finalValue){
+        TypeElement typeElement = (TypeElement) element.getEnclosingElement();
+        StringBuilder builder = new StringBuilder();
+        builder.append(finalValue)
+                .append(" = t.");
+        TypeElement activityType = elementUtils.getTypeElement(Constants.ACTIVITY);
+        TypeElement fragmentType = elementUtils.getTypeElement(Constants.FRAGMENT);
+        TypeElement iGetIntentType = elementUtils.getTypeElement(Constants.IGETINTENT);
+        if (!typeUtils.isSubtype(typeElement.asType(), activityType.asType())
+                && !typeUtils.isSubtype(typeElement.asType(), fragmentType.asType())
+                && !typeUtils.isAssignable(typeElement.asType(), iGetIntentType.asType())) {
+            throw new RuntimeException("@Parameter注解目前仅限用于Activity类和Fragment类, 以及实现了IGetIntent接口的类上面");
+        }
+
+        if(typeUtils.isSubtype(typeElement.asType(), activityType.asType())){
+            builder.append("getIntent().");
+        }else if(typeUtils.isSubtype(typeElement.asType(), fragmentType.asType())){
+            builder.append("getArguments().");
+        }else if(typeUtils.isAssignable(typeElement.asType(), iGetIntentType.asType())){
+            builder.append("getIntent().");
+        }
+        return builder.toString();
+    }
+
     private String parseArray(TypeMirror typeMirror, String methodContent) {
         if (typeMirror.toString().equalsIgnoreCase(Constants.STRING_ARRAY)) {
             methodContent += "getStringArrayExtra($S)";
@@ -130,6 +162,8 @@ public class ParameterFactory {
 
         // 类名，如：MainActivity
         private ClassName className;
+        private Elements elementUtils;
+        private Types typeUtils;
 
         // 方法参数体
         private ParameterSpec parameterSpec;
@@ -162,6 +196,16 @@ public class ParameterFactory {
             }
 
             return new ParameterFactory(this);
+        }
+
+        public Builder setElementsUtils(Elements elementUtils) {
+            this.elementUtils = elementUtils;
+            return this;
+        }
+
+        public Builder setTypeUtils(Types typeUtils) {
+            this.typeUtils = typeUtils;
+            return this;
         }
     }
 }
