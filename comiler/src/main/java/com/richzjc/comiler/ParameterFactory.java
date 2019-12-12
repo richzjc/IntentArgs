@@ -2,6 +2,7 @@ package com.richzjc.comiler;
 
 import com.richzjc.annotation.Parameter;
 import com.richzjc.comiler.util.EmptyUtils;
+import com.richzjc.comiler.util.Utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -78,28 +79,43 @@ public class ParameterFactory {
         String finalValue = "t." + fieldName;
         // t.s = t.getIntent().
         String methodContent = getMethodContent(element, finalValue);
-        messager.printMessage(Diagnostic.Kind.NOTE, "如何查看日志" + type);
+        messager.printMessage(Diagnostic.Kind.NOTE, "type = " + type + "; typeMIrror  = " + typeMirror.toString());
+
         // TypeKind 枚举类型不包含String
         if (type == TypeKind.INT.ordinal()) {
             methodContent += "getIntExtra($S, " + finalValue + ")";
         } else if (type == TypeKind.BOOLEAN.ordinal()) {
             methodContent += "getBooleanExtra($S, " + finalValue + ")";
         } else if (type == TypeKind.BYTE.ordinal()) {
-            methodContent += "getByteExtra($S, " + finalValue + ")";
+            methodContent += "getByte($S, " + finalValue + ")";
         } else if (type == TypeKind.SHORT.ordinal()) {
-            methodContent += "getShortExtra($S, " + finalValue + ")";
+            methodContent += "getShort($S, " + finalValue + ")";
         } else if (type == TypeKind.LONG.ordinal()) {
             methodContent += "getLongExtra($S, " + finalValue + ")";
         } else if (type == TypeKind.CHAR.ordinal()) {
-            methodContent += "getCharExtra($S, " + finalValue + ")";
+            methodContent += "getChar($S, " + finalValue + ")";
         } else if (type == TypeKind.FLOAT.ordinal()) {
-            methodContent += "getFloatExtra($S, " + finalValue + ")";
+            methodContent += "getFloat($S, " + finalValue + ")";
         } else if (type == TypeKind.ARRAY.ordinal()) {
             messager.printMessage(Diagnostic.Kind.NOTE, "type = " + type + "; typeMIrror  = " + typeMirror.toString());
             methodContent = parseArray(typeMirror, methodContent);
         } else if (typeMirror.toString().equalsIgnoreCase(Constants.STRING)) {
-            methodContent += "getStringExtra($S)";
+            methodContent += "getString($S, " + finalValue + ")";
+        }else if(typeMirror.toString().equalsIgnoreCase(Constants.CHARSEQUENCE)){
+            methodContent += "getCharSequence($S, " + finalValue + ")";
+        }else if(typeMirror.toString().equalsIgnoreCase(Constants.BUNDLE)){
+            methodContent += "getBundle($S)";
+        }else if(Utils.checkIsSerializable(typeMirror, elementUtils, typeUtils)){
+            methodContent += "getSerializable($S)";
+        }else if(type == TypeKind.DECLARED.ordinal()){
+            methodContent += "getParcelable($S)";
         }
+//        else if(true){
+//            //TODO Parcelable com.richzjc.intentargs.TestEntity
+//        }
+//        else if(true){
+//            //TODO Parcelable com.richzjc.intentargs.TestEntity[] 写在array的方法里面
+//        }
 
         // 健壮代码
         if (methodContent.endsWith(")")) {
@@ -125,32 +141,36 @@ public class ParameterFactory {
         }
 
         if(typeUtils.isSubtype(typeElement.asType(), activityType.asType())){
-            builder.append("getIntent().");
+            builder.append("getIntent().getExtras()");
         }else if(typeUtils.isSubtype(typeElement.asType(), fragmentType.asType())){
             builder.append("getArguments().");
         }else if(typeUtils.isAssignable(typeElement.asType(), iGetIntentType.asType())){
-            builder.append("getIntent().");
+            builder.append("getBundle().");
         }
         return builder.toString();
     }
 
     private String parseArray(TypeMirror typeMirror, String methodContent) {
         if (typeMirror.toString().equalsIgnoreCase(Constants.STRING_ARRAY)) {
-            methodContent += "getStringArrayExtra($S)";
+            methodContent += "getStringArray($S)";
         }else if(typeMirror.toString().equalsIgnoreCase("int[]")){
-            methodContent += "getIntArrayExtra($S)";
+            methodContent += "getIntArray($S)";
         }else if(typeMirror.toString().equalsIgnoreCase("float[]")){
-            methodContent += "getFloatArrayExtra($S)";
+            methodContent += "getFloatArray($S)";
         }else if(typeMirror.toString().equalsIgnoreCase("char[]")){
-            methodContent += "getCharArrayExtra($S)";
+            methodContent += "getCharArray($S)";
         }else if(typeMirror.toString().equalsIgnoreCase("double[]")){
-            methodContent += "getDoubleArrayExtra($S)";
+            methodContent += "getDoubleArray($S)";
         }else if(typeMirror.toString().equalsIgnoreCase("byte[]")){
-            methodContent += "getByteArrayExtra($S)";
+            methodContent += "getByteArray($S)";
         }else if(typeMirror.toString().equalsIgnoreCase("short[]")){
-            methodContent += "getShortArrayExtra($S)";
+            methodContent += "getShortArray($S)";
         }else if(typeMirror.toString().equalsIgnoreCase("boolean[]")){
-            methodContent += "getBooleanArrayExtra($S)";
+            methodContent += "getBooleanArray($S)";
+        }else if(typeMirror.toString().equalsIgnoreCase("java.lang.CharSequence[]")){
+            methodContent += "getCharSequenceArray($S)";
+        }else if(typeMirror.toString().equalsIgnoreCase("long[]")){
+            methodContent += "getLongArray($S)";
         }
         return methodContent;
     }

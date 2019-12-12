@@ -27,6 +27,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
@@ -118,7 +119,7 @@ public class ParameterProcessor extends AbstractProcessor {
             // 如果类名的类型和Activity类型不匹配
             if (!typeUtils.isSubtype(typeElement.asType(), activityType.asType())
                     && !typeUtils.isSubtype(typeElement.asType(), fragmentType.asType())
-                    && !typeUtils.isAssignable(typeElement.asType(), iGetIntentType.asType())) {
+                    && !typeUtils.isSubtype(typeElement.asType(), iGetIntentType.asType())) {
                 throw new RuntimeException("@Parameter注解目前仅限用于Activity类和Fragment类, 以及实现了IGetIntent接口的类上面");
             }
 
@@ -144,7 +145,28 @@ public class ParameterProcessor extends AbstractProcessor {
             String finalClassName = typeElement.getSimpleName() + Constants.PARAMETER_FILE_NAME;
             messager.printMessage(Diagnostic.Kind.NOTE, "APT生成获取参数类文件：" +
                     className.packageName() + "." + finalClassName);
-
+            messager.printMessage(Diagnostic.Kind.NOTE,
+                    " BOOLEAN = " +  TypeKind.BYTE.ordinal()
+                    + " BYTE = " + TypeKind.BYTE.ordinal()
+                    + " SHORT = " + TypeKind.BYTE.ordinal()
+                    + " INT = "  + TypeKind.BYTE.ordinal()
+                    + " LONG = " + TypeKind.BYTE.ordinal()
+                    + " CHAR = " + TypeKind.BYTE.ordinal()
+                    + " FLOAT = " + TypeKind.BYTE.ordinal()
+                    + " DOUBLE = " + TypeKind.BYTE.ordinal()
+                    + " VOID = " + TypeKind.BYTE.ordinal()
+                    + " NONE = " + TypeKind.BYTE.ordinal()
+                    + " NULL = " + TypeKind.BYTE.ordinal()
+                    + " ARRAY = " + TypeKind.BYTE.ordinal()
+                    + " DECLARED = " + TypeKind.BYTE.ordinal()
+                    + " ERROR = " + TypeKind.BYTE.ordinal()
+                    + " TYPEVAR = " + TypeKind.BYTE.ordinal()
+                    + " WILDCARD = " + TypeKind.BYTE.ordinal()
+                    + " PACKAGE = " + TypeKind.BYTE.ordinal()
+                    + " EXECUTABLE = " + TypeKind.BYTE.ordinal()
+                    + " OTHER = " + TypeKind.BYTE.ordinal()
+                    + " UNION = " + TypeKind.BYTE.ordinal()
+                    + " INTERSECTION = " +  TypeKind.BYTE.ordinal());
             // MainActivity$$Parameter
             JavaFile.builder(className.packageName(), // 包名
                     TypeSpec.classBuilder(finalClassName) // 类名

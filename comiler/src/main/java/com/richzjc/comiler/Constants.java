@@ -4,7 +4,7 @@ public class Constants {
     // Activity全类名
     public static final String ACTIVITY = "android.app.Activity";
     public static final String FRAGMENT = "androidx.fragment.app.Fragment";
-    public static final String IGETINTENT = "com.richzjc.anotation_api.IGetIntent";
+    public static final String IGETINTENT = "com.richzjc.anotation_api.IGetBundle";
     static final String BASE_PACKAGE = "com.richzjc.anotation_api";
     // 获取参数，加载接口
     public static final String PARAMETER_LOAD = BASE_PACKAGE + ".ParameterLoad";
@@ -19,6 +19,8 @@ public class Constants {
 
     // String全类名
     public static final String STRING = "java.lang.String";
+    public static final String CHARSEQUENCE = "java.lang.CharSequence";
+    public static final String BUNDLE = "android.os.Bundle";
     public static final String STRING_ARRAY = "java.lang.String[]";
 
 }
