@@ -75,10 +75,10 @@ public class ParameterFactory {
 
         // TypeKind 枚举类型不包含String
         if (type == TypeKind.INT.ordinal()) {
-            methodContent += "getIntExtra($S, " + finalValue + ")";
+            methodContent += "getInt($S, " + finalValue + ")";
             addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (type == TypeKind.BOOLEAN.ordinal()) {
-            methodContent += "getBooleanExtra($S, " + finalValue + ")";
+            methodContent += "getBoolean($S, " + finalValue + ")";
             addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (type == TypeKind.BYTE.ordinal()) {
             methodContent += "getByte($S, " + finalValue + ")";
@@ -87,7 +87,7 @@ public class ParameterFactory {
             methodContent += "getShort($S, " + finalValue + ")";
             addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (type == TypeKind.LONG.ordinal()) {
-            methodContent += "getLongExtra($S, " + finalValue + ")";
+            methodContent += "getLong($S, " + finalValue + ")";
             addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (type == TypeKind.CHAR.ordinal()) {
             methodContent += "getChar($S, " + finalValue + ")";

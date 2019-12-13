@@ -23,6 +23,30 @@ public class MainActivity extends AppCompatActivity {
     @Parameter(name = "rich")
     List<CharSequence> sarr3;
 
+    @Parameter(name = "rich")
+    TestEntity[] sarr4;
+
+    @Parameter(name = "rich")
+    String[] sarr5;
+
+    @Parameter(name = "rich")
+    boolean[] sarr6;
+
+    @Parameter(name = "rich")
+    int[] sarr7;
+
+    @Parameter(name = "rich")
+    short[] sarr8;
+
+    @Parameter(name = "rich")
+    float[] sarr9;
+
+    @Parameter(name = "rich")
+    String sarr10;
+
+    @Parameter(name = "rich")
+    int sarr11;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

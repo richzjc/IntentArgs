@@ -1,4 +1,4 @@
 include ':app'
 include ':comiler'
 include ':anotation_api'
-//include ':annotation'
+include ':annotation'
