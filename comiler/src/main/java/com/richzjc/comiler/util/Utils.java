@@ -20,4 +20,17 @@ public class Utils {
         TypeElement activityType = elementUtils.getTypeElement("java.util.List");
         return typeUtils.isSubtype(mirror, activityType.asType());
     }
+
+    public static boolean isParcelableArray(TypeMirror typeMirror, Elements elementUtils, Types typeUtils) {
+        TypeElement activityType = elementUtils.getTypeElement("android.os.Parcelable");
+        String typeMirrorValue = typeMirror.toString();
+        if(typeMirrorValue.contains("[")){
+            int index = typeMirrorValue.indexOf("[");
+            String typeValue = typeMirrorValue.substring(0, index);
+            TypeElement typeElement = elementUtils.getTypeElement(typeValue);
+            return typeUtils.isSubtype(typeElement.asType(), activityType.asType());
+        }else{
+            return false;
+        }
+    }
 }

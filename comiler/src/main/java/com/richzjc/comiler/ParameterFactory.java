@@ -6,8 +6,6 @@ import com.richzjc.comiler.util.Utils;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
-
-import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
@@ -72,7 +70,7 @@ public class ParameterFactory {
         annotationValue = EmptyUtils.isEmpty(annotationValue) ? fieldName : annotationValue;
         String finalValue = "t." + fieldName;
         String methodContent = getMethodContent(element, finalValue);
-        messager.printMessage(Diagnostic.Kind.NOTE, "type = " + type + "; typeMIrror  = " + typeMirror.toString());
+        messager.printMessage(Diagnostic.Kind.NOTE, "type = " + type + "; typeMIrror  = " + typeMirror.toString() + ";  methodContent = " + methodContent);
 
         // TypeKind 枚举类型不包含String
         if (type == TypeKind.INT.ordinal()) {
@@ -90,7 +88,6 @@ public class ParameterFactory {
         } else if (type == TypeKind.FLOAT.ordinal()) {
             methodContent += "getFloat($S, " + finalValue + ")";
         } else if (type == TypeKind.ARRAY.ordinal()) {
-            messager.printMessage(Diagnostic.Kind.NOTE, "type = " + type + "; typeMIrror  = " + typeMirror.toString());
             methodContent = parseArray(typeMirror, methodContent);
         } else if (typeMirror.toString().equalsIgnoreCase(Constants.STRING)) {
             methodContent += "getString($S, " + finalValue + ")";
@@ -99,10 +96,12 @@ public class ParameterFactory {
         } else if (typeMirror.toString().equalsIgnoreCase(Constants.BUNDLE)) {
             methodContent += "getBundle($S)";
         } else if (type == TypeKind.DECLARED.ordinal()) {
-            methodContent += getDeclaredContent(element, methodContent);
+            methodContent = getDeclaredContent(element, methodContent);
+            messager.printMessage(Diagnostic.Kind.NOTE, ";  methodContent = " + methodContent);
         }
 
         methodContent = finalValue + " = " + methodContent;
+        messager.printMessage(Diagnostic.Kind.NOTE, ";  methodContent = " + methodContent);
 
         // 健壮代码
         if (methodContent.endsWith(")")) {
@@ -168,6 +167,8 @@ public class ParameterFactory {
             methodContent += "getCharSequenceArray($S)";
         } else if (typeMirror.toString().equalsIgnoreCase("long[]")) {
             methodContent += "getLongArray($S)";
+        } else if(Utils.isParcelableArray(typeMirror, elementUtils, typeUtils)){
+            methodContent += "getParcelableArray($S)";
         }
         return methodContent;
     }

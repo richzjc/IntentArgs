@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     @Parameter(name = "rich")
-    String sarr;
+    ArrayList<String> sarr;
 
 
     @Override
@@ -20,6 +20,5 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_main);
         ParameterManager.getInstance().loadParameter(this);
-
     }
 }
