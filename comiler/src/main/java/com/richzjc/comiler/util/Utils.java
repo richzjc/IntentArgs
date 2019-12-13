@@ -11,4 +11,13 @@ public class Utils {
         return typeUtils.isSubtype(mirror, activityType.asType());
     }
 
+    public static boolean checkIsParcelable(TypeMirror mirror, Elements elementUtils, Types typeUtils){
+        TypeElement activityType = elementUtils.getTypeElement("android.os.Parcelable");
+        return typeUtils.isSubtype(mirror, activityType.asType());
+    }
+
+    public static boolean checkIsList(TypeMirror mirror, Elements elementUtils, Types typeUtils){
+        TypeElement activityType = elementUtils.getTypeElement("java.util.List");
+        return typeUtils.isSubtype(mirror, activityType.asType());
+    }
 }

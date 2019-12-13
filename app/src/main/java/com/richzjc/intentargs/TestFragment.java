@@ -8,6 +8,6 @@ import java.util.List;
 
 public class TestFragment extends Fragment {
 
-    @Parameter(name = "richzjc")
-    List<String> name;
+//    @Parameter(name = "richzjc")
+//    List<String> name;
 }

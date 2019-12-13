@@ -11,10 +11,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    //    @Parameter(name = "rich")
-//    CharSequence[] bytea;
-//    @Parameter(name = "rich")
-//    ArrayList<String> sarr;
+    @Parameter(name = "rich")
+    String sarr;
 
 
     @Override

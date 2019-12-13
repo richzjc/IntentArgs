@@ -23,6 +23,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
-    annotationProcessor "com.richzjc:intentArgs_compiler:1.0.4"
-    implementation "com.richzjc:intentargs:1.0.4"
+//    annotationProcessor "com.richzjc:intentArgs_compiler:1.0.7"
+//    implementation "com.richzjc:intentargs:1.0.7"
+    api project(":anotation_api")
+    annotationProcessor project(":comiler")
 }

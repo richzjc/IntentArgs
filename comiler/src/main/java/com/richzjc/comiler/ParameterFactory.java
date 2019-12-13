@@ -65,19 +65,12 @@ public class ParameterFactory {
      * @param element 被注解的属性元素
      */
     public void buildStatement(Element element) {
-        // 遍历注解的属性节点 生成函数体
         TypeMirror typeMirror = element.asType();
-        // 获取 TypeKind 枚举类型的序列号
         int type = typeMirror.getKind().ordinal();
-        // 获取属性名
         String fieldName = element.getSimpleName().toString();
-        // 获取注解的值
         String annotationValue = element.getAnnotation(Parameter.class).name();
-        // 判断注解的值为空的情况下的处理（注解中有name值就用注解值）
         annotationValue = EmptyUtils.isEmpty(annotationValue) ? fieldName : annotationValue;
-        // 最终拼接的前缀：
         String finalValue = "t." + fieldName;
-        // t.s = t.getIntent().
         String methodContent = getMethodContent(element, finalValue);
         messager.printMessage(Diagnostic.Kind.NOTE, "type = " + type + "; typeMIrror  = " + typeMirror.toString());
 
@@ -101,21 +94,15 @@ public class ParameterFactory {
             methodContent = parseArray(typeMirror, methodContent);
         } else if (typeMirror.toString().equalsIgnoreCase(Constants.STRING)) {
             methodContent += "getString($S, " + finalValue + ")";
-        }else if(typeMirror.toString().equalsIgnoreCase(Constants.CHARSEQUENCE)){
+        } else if (typeMirror.toString().equalsIgnoreCase(Constants.CHARSEQUENCE)) {
             methodContent += "getCharSequence($S, " + finalValue + ")";
-        }else if(typeMirror.toString().equalsIgnoreCase(Constants.BUNDLE)){
+        } else if (typeMirror.toString().equalsIgnoreCase(Constants.BUNDLE)) {
             methodContent += "getBundle($S)";
-        }else if(Utils.checkIsSerializable(typeMirror, elementUtils, typeUtils)){
-            methodContent += "getSerializable($S)";
-        }else if(type == TypeKind.DECLARED.ordinal()){
-            methodContent += "getParcelable($S)";
+        } else if (type == TypeKind.DECLARED.ordinal()) {
+            methodContent += getDeclaredContent(element, methodContent);
         }
-//        else if(true){
-//            //TODO Parcelable com.richzjc.intentargs.TestEntity
-//        }
-//        else if(true){
-//            //TODO Parcelable com.richzjc.intentargs.TestEntity[] 写在array的方法里面
-//        }
+
+        methodContent = finalValue + " = " + methodContent;
 
         // 健壮代码
         if (methodContent.endsWith(")")) {
@@ -126,11 +113,21 @@ public class ParameterFactory {
         }
     }
 
-    private String getMethodContent(Element element, String finalValue){
+    private String getDeclaredContent(Element element, String methodContent) {
+        TypeMirror typeMirror = element.asType();
+        messager.printMessage(Diagnostic.Kind.NOTE, element.getEnclosedElements().toString());
+        if (Utils.checkIsList(typeMirror, elementUtils, typeUtils)) {
+            messager.printMessage(Diagnostic.Kind.NOTE, element.getEnclosedElements().toString());
+        } else if (Utils.checkIsSerializable(typeMirror, elementUtils, typeUtils)) {
+            methodContent += "getSerializable($S)";
+        }
+        return methodContent;
+    }
+
+    private String getMethodContent(Element element, String finalValue) {
         TypeElement typeElement = (TypeElement) element.getEnclosingElement();
         StringBuilder builder = new StringBuilder();
-        builder.append(finalValue)
-                .append(" = t.");
+        builder.append("t.");
         TypeElement activityType = elementUtils.getTypeElement(Constants.ACTIVITY);
         TypeElement fragmentType = elementUtils.getTypeElement(Constants.FRAGMENT);
         TypeElement iGetIntentType = elementUtils.getTypeElement(Constants.IGETINTENT);
@@ -140,11 +137,11 @@ public class ParameterFactory {
             throw new RuntimeException("@Parameter注解目前仅限用于Activity类和Fragment类, 以及实现了IGetIntent接口的类上面");
         }
 
-        if(typeUtils.isSubtype(typeElement.asType(), activityType.asType())){
-            builder.append("getIntent().getExtras()");
-        }else if(typeUtils.isSubtype(typeElement.asType(), fragmentType.asType())){
+        if (typeUtils.isSubtype(typeElement.asType(), activityType.asType())) {
+            builder.append("getIntent().getExtras().");
+        } else if (typeUtils.isSubtype(typeElement.asType(), fragmentType.asType())) {
             builder.append("getArguments().");
-        }else if(typeUtils.isAssignable(typeElement.asType(), iGetIntentType.asType())){
+        } else if (typeUtils.isAssignable(typeElement.asType(), iGetIntentType.asType())) {
             builder.append("getBundle().");
         }
         return builder.toString();
@@ -153,23 +150,23 @@ public class ParameterFactory {
     private String parseArray(TypeMirror typeMirror, String methodContent) {
         if (typeMirror.toString().equalsIgnoreCase(Constants.STRING_ARRAY)) {
             methodContent += "getStringArray($S)";
-        }else if(typeMirror.toString().equalsIgnoreCase("int[]")){
+        } else if (typeMirror.toString().equalsIgnoreCase("int[]")) {
             methodContent += "getIntArray($S)";
-        }else if(typeMirror.toString().equalsIgnoreCase("float[]")){
+        } else if (typeMirror.toString().equalsIgnoreCase("float[]")) {
             methodContent += "getFloatArray($S)";
-        }else if(typeMirror.toString().equalsIgnoreCase("char[]")){
+        } else if (typeMirror.toString().equalsIgnoreCase("char[]")) {
             methodContent += "getCharArray($S)";
-        }else if(typeMirror.toString().equalsIgnoreCase("double[]")){
+        } else if (typeMirror.toString().equalsIgnoreCase("double[]")) {
             methodContent += "getDoubleArray($S)";
-        }else if(typeMirror.toString().equalsIgnoreCase("byte[]")){
+        } else if (typeMirror.toString().equalsIgnoreCase("byte[]")) {
             methodContent += "getByteArray($S)";
-        }else if(typeMirror.toString().equalsIgnoreCase("short[]")){
+        } else if (typeMirror.toString().equalsIgnoreCase("short[]")) {
             methodContent += "getShortArray($S)";
-        }else if(typeMirror.toString().equalsIgnoreCase("boolean[]")){
+        } else if (typeMirror.toString().equalsIgnoreCase("boolean[]")) {
             methodContent += "getBooleanArray($S)";
-        }else if(typeMirror.toString().equalsIgnoreCase("java.lang.CharSequence[]")){
+        } else if (typeMirror.toString().equalsIgnoreCase("java.lang.CharSequence[]")) {
             methodContent += "getCharSequenceArray($S)";
-        }else if(typeMirror.toString().equalsIgnoreCase("long[]")){
+        } else if (typeMirror.toString().equalsIgnoreCase("long[]")) {
             methodContent += "getLongArray($S)";
         }
         return methodContent;
