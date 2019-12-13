@@ -69,40 +69,49 @@ public class ParameterFactory {
         String annotationValue = element.getAnnotation(Parameter.class).name();
         annotationValue = EmptyUtils.isEmpty(annotationValue) ? fieldName : annotationValue;
         String finalValue = "t." + fieldName;
-        String methodContent = getMethodContent(element, finalValue);
+        String methodContent = getMethodContent(element);
         messager.printMessage(Diagnostic.Kind.NOTE, "type = " + type + "; typeMIrror  = " + typeMirror.toString() + ";  methodContent = " + methodContent);
 
         // TypeKind 枚举类型不包含String
         if (type == TypeKind.INT.ordinal()) {
             methodContent += "getIntExtra($S, " + finalValue + ")";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (type == TypeKind.BOOLEAN.ordinal()) {
             methodContent += "getBooleanExtra($S, " + finalValue + ")";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (type == TypeKind.BYTE.ordinal()) {
             methodContent += "getByte($S, " + finalValue + ")";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (type == TypeKind.SHORT.ordinal()) {
             methodContent += "getShort($S, " + finalValue + ")";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (type == TypeKind.LONG.ordinal()) {
             methodContent += "getLongExtra($S, " + finalValue + ")";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (type == TypeKind.CHAR.ordinal()) {
             methodContent += "getChar($S, " + finalValue + ")";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (type == TypeKind.FLOAT.ordinal()) {
             methodContent += "getFloat($S, " + finalValue + ")";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (type == TypeKind.ARRAY.ordinal()) {
-            methodContent = parseArray(typeMirror, methodContent);
+           parseArray(typeMirror, annotationValue, methodContent, finalValue);
         } else if (typeMirror.toString().equalsIgnoreCase(Constants.STRING)) {
             methodContent += "getString($S, " + finalValue + ")";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (typeMirror.toString().equalsIgnoreCase(Constants.CHARSEQUENCE)) {
             methodContent += "getCharSequence($S, " + finalValue + ")";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (typeMirror.toString().equalsIgnoreCase(Constants.BUNDLE)) {
             methodContent += "getBundle($S)";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (type == TypeKind.DECLARED.ordinal()) {
-            methodContent = getDeclaredContent(element, methodContent);
-            messager.printMessage(Diagnostic.Kind.NOTE, ";  methodContent = " + methodContent);
+            getDeclaredContent(element, methodContent, annotationValue, finalValue);
         }
+    }
 
+    private void addMethod(TypeMirror typeMirror, String annotationValue, String methodContent, String finalValue) {
         methodContent = finalValue + " = " + methodContent;
-        messager.printMessage(Diagnostic.Kind.NOTE, ";  methodContent = " + methodContent);
-
         // 健壮代码
         if (methodContent.endsWith(")")) {
             // 添加最终拼接方法内容语句
@@ -112,18 +121,24 @@ public class ParameterFactory {
         }
     }
 
-    private String getDeclaredContent(Element element, String methodContent) {
+    private String getDeclaredContent(Element element, String methodContent, String annotationValue, String finalValue) {
         TypeMirror typeMirror = element.asType();
         messager.printMessage(Diagnostic.Kind.NOTE, element.getEnclosedElements().toString());
         if (Utils.checkIsList(typeMirror, elementUtils, typeUtils)) {
-            messager.printMessage(Diagnostic.Kind.NOTE, element.getEnclosedElements().toString());
+            messager.printMessage(Diagnostic.Kind.NOTE, "wygdj今天是你的 日子");
         } else if (Utils.checkIsSerializable(typeMirror, elementUtils, typeUtils)) {
             methodContent += "getSerializable($S)";
+            TypeElement typeElement = elementUtils.getTypeElement(typeMirror.toString());
+            methodContent = "($T)" + methodContent;
+            methodContent = finalValue + " = " + methodContent;
+            messager.printMessage(Diagnostic.Kind.NOTE, "fdasklfjaklfd>>>" + methodContent);
+            methodBuidler.addStatement(methodContent, ClassName.get(typeElement), annotationValue);
+
         }
         return methodContent;
     }
 
-    private String getMethodContent(Element element, String finalValue) {
+    private String getMethodContent(Element element) {
         TypeElement typeElement = (TypeElement) element.getEnclosingElement();
         StringBuilder builder = new StringBuilder();
         builder.append("t.");
@@ -146,29 +161,44 @@ public class ParameterFactory {
         return builder.toString();
     }
 
-    private String parseArray(TypeMirror typeMirror, String methodContent) {
+    private String parseArray(TypeMirror typeMirror, String annotationValue, String methodContent, String finalValue) {
         if (typeMirror.toString().equalsIgnoreCase(Constants.STRING_ARRAY)) {
             methodContent += "getStringArray($S)";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (typeMirror.toString().equalsIgnoreCase("int[]")) {
             methodContent += "getIntArray($S)";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (typeMirror.toString().equalsIgnoreCase("float[]")) {
             methodContent += "getFloatArray($S)";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (typeMirror.toString().equalsIgnoreCase("char[]")) {
             methodContent += "getCharArray($S)";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (typeMirror.toString().equalsIgnoreCase("double[]")) {
             methodContent += "getDoubleArray($S)";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (typeMirror.toString().equalsIgnoreCase("byte[]")) {
             methodContent += "getByteArray($S)";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (typeMirror.toString().equalsIgnoreCase("short[]")) {
             methodContent += "getShortArray($S)";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (typeMirror.toString().equalsIgnoreCase("boolean[]")) {
             methodContent += "getBooleanArray($S)";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (typeMirror.toString().equalsIgnoreCase("java.lang.CharSequence[]")) {
             methodContent += "getCharSequenceArray($S)";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if (typeMirror.toString().equalsIgnoreCase("long[]")) {
             methodContent += "getLongArray($S)";
+            addMethod(typeMirror, annotationValue, methodContent, finalValue);
         } else if(Utils.isParcelableArray(typeMirror, elementUtils, typeUtils)){
             methodContent += "getParcelableArray($S)";
+            TypeElement typeElement = elementUtils.getTypeElement(Utils.getArrayType(typeMirror));
+            methodContent = "($T[])" + methodContent;
+            methodContent = finalValue + " = " + methodContent;
+            messager.printMessage(Diagnostic.Kind.NOTE, "fdasklfjaklfd>>>" + methodContent);
+            methodBuidler.addStatement(methodContent, ClassName.get(typeElement), annotationValue);
         }
         return methodContent;
     }

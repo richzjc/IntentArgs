@@ -7,12 +7,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.richzjc.annotation.Parameter;
 import com.richzjc.anotation_api.manager.ParameterManager;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
 public class MainActivity extends AppCompatActivity {
 
     @Parameter(name = "rich")
-    ArrayList<String> sarr;
+    Serializable sarr;
 
 
     @Override

@@ -33,4 +33,15 @@ public class Utils {
             return false;
         }
     }
+
+    public static String getArrayType(TypeMirror typeMirror) {
+        String typeMirrorValue = typeMirror.toString();
+        if(typeMirrorValue.contains("[")){
+            int index = typeMirrorValue.indexOf("[");
+            String typeValue = typeMirrorValue.substring(0, index);
+            return typeValue;
+        }else{
+            return "";
+        }
+    }
 }
