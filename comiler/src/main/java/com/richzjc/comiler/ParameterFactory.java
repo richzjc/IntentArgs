@@ -10,6 +10,7 @@ import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -123,19 +124,52 @@ public class ParameterFactory {
 
     private String getDeclaredContent(Element element, String methodContent, String annotationValue, String finalValue) {
         TypeMirror typeMirror = element.asType();
-        messager.printMessage(Diagnostic.Kind.NOTE, element.getEnclosedElements().toString());
-        if (Utils.checkIsList(typeMirror, elementUtils, typeUtils)) {
-            messager.printMessage(Diagnostic.Kind.NOTE, "wygdj今天是你的 日子");
-        } else if (Utils.checkIsSerializable(typeMirror, elementUtils, typeUtils)) {
+        if (Utils.checkIsList(typeMirror)) {
+            parsedList(typeMirror, methodContent, finalValue, annotationValue);
+        } else if(Utils.checkIsParcelable(typeMirror, elementUtils, typeUtils)){
+            methodContent += "getParcelable($S)";
+            TypeElement typeElement = elementUtils.getTypeElement(typeMirror.toString());
+            methodContent = "($T)" + methodContent;
+            methodContent = finalValue + " = " + methodContent;
+            methodBuidler.addStatement(methodContent, ClassName.get(typeElement), annotationValue);
+        }else if (Utils.checkIsSerializable(typeMirror, elementUtils, typeUtils)) {
             methodContent += "getSerializable($S)";
             TypeElement typeElement = elementUtils.getTypeElement(typeMirror.toString());
             methodContent = "($T)" + methodContent;
             methodContent = finalValue + " = " + methodContent;
-            messager.printMessage(Diagnostic.Kind.NOTE, "fdasklfjaklfd>>>" + methodContent);
             methodBuidler.addStatement(methodContent, ClassName.get(typeElement), annotationValue);
 
         }
         return methodContent;
+    }
+
+    private void parsedList(TypeMirror mirror, String methodContent, String  finalValue, String annotationValue){
+        String value = mirror.toString();
+        if(value.contains("<") && value.contains(">")){
+            String typeStr = value.substring(value.indexOf("<") + 1, value.lastIndexOf(">"));
+            // TypeKind 枚举类型不包含String
+            Element element = elementUtils.getTypeElement(typeStr);
+            TypeMirror typeMirror = element.asType();
+            int type = typeMirror.getKind().ordinal();
+            if (type == TypeKind.INT.ordinal() || typeMirror.toString().equalsIgnoreCase("java.lang.Integer")) {
+                methodContent += "getIntegerArrayList($S)";
+                addMethod(typeMirror, annotationValue, methodContent, finalValue);
+            }else if (typeMirror.toString().equalsIgnoreCase(Constants.STRING)) {
+                methodContent += "getStringArrayList($S)";
+                addMethod(typeMirror, annotationValue, methodContent, finalValue);
+            } else if (typeMirror.toString().equalsIgnoreCase(Constants.CHARSEQUENCE)) {
+                methodContent += "getCharSequenceArrayList($S)";
+                addMethod(typeMirror, annotationValue, methodContent, finalValue);
+            } else if (type == TypeKind.DECLARED.ordinal()) {
+                methodContent += "getParcelableArrayList($S)";
+                methodContent = finalValue + " = " + methodContent;
+                methodBuidler.addStatement(methodContent, annotationValue);
+            }
+        }else{
+            methodContent += "getParcelableArrayList($S)";
+            methodContent = finalValue + " = " + methodContent;
+            methodBuidler.addStatement(methodContent, annotationValue);
+        }
     }
 
     private String getMethodContent(Element element) {

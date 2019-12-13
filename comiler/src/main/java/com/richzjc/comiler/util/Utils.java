@@ -16,9 +16,9 @@ public class Utils {
         return typeUtils.isSubtype(mirror, activityType.asType());
     }
 
-    public static boolean checkIsList(TypeMirror mirror, Elements elementUtils, Types typeUtils){
-        TypeElement activityType = elementUtils.getTypeElement("java.util.List");
-        return typeUtils.isSubtype(mirror, activityType.asType());
+    public static boolean checkIsList(TypeMirror mirror){
+        String typeMirrorValue = mirror.toString();
+        return typeMirrorValue.startsWith("java.util.List") || typeMirrorValue.startsWith("java.util.ArrayList");
     }
 
     public static boolean isParcelableArray(TypeMirror typeMirror, Elements elementUtils, Types typeUtils) {
