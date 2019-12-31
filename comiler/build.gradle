@@ -5,7 +5,7 @@ publish {
     userOrg = 'richzjc'
     groupId = 'com.richzjc'
     artifactId = 'intentArgs_compiler'
-    publishVersion = '1.0.3'
+    publishVersion = '1.0.4'
     desc = '类似于Butterknife的形式获取Intent里面携带的参数'
     website = 'https://github.com/novoda/bintray-release'
 }
@@ -24,7 +24,7 @@ buildscript {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.squareup:javapoet:1.11.1'
-    implementation 'com.richzjc:intentargs_annotation:1.0.3'
+    implementation 'com.richzjc:intentargs_annotation:1.0.4'
     compileOnly 'com.google.auto.service:auto-service:1.0-rc6'
     annotationProcessor 'com.google.auto.service:auto-service:1.0-rc6'
 
