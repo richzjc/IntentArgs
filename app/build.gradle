@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -23,6 +26,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
-    annotationProcessor "com.richzjc:intentArgs_compiler:1.0.3"
+    kapt "com.richzjc:intentArgs_compiler:1.0.3"
     implementation "com.richzjc:intentargs:1.0.3"
 }
