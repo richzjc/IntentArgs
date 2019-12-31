@@ -37,10 +37,10 @@ public final class ParameterManager {
     /**
      * 传入的Activity中所有被@Parameter注解的属性。通过加载APT生成源文件，并给属性赋值
      *
-     * @param activity 需要给属性赋值的类，如：MainActivity中所有被@Parameter注解的属性
+     * @param object 需要给属性赋值的类，如：MainActivity中所有被@Parameter注解的属性
      */
-    public void loadParameter(@NonNull Activity activity) {
-        String className = activity.getClass().getName();
+    public void loadParameter(@NonNull Object object) {
+        String className = object.getClass().getName();
         // 查找缓存集合中是否有对应activity的value
         ParameterLoad iParameter = cache.get(className);
         try {
@@ -53,7 +53,7 @@ public final class ParameterManager {
             }
 
             // 通过传入参数给生成的源文件中所有属性赋值
-            iParameter.loadParameter(activity);
+            iParameter.loadParameter(object);
         } catch (Exception e) {
             e.printStackTrace();
         }

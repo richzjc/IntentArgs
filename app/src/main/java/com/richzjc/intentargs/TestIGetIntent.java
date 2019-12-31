@@ -1,8 +1,6 @@
 package com.richzjc.intentargs;
 
-import android.content.Intent;
 import android.os.Bundle;
-
 import com.richzjc.annotation.Parameter;
 import com.richzjc.anotation_api.IGetBundle;
 import java.util.List;
