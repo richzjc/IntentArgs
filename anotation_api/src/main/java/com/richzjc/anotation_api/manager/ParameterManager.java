@@ -1,6 +1,7 @@
 package com.richzjc.anotation_api.manager;
 
 import android.app.Activity;
+import android.util.Log;
 import android.util.LruCache;
 import androidx.annotation.NonNull;
 import com.richzjc.anotation_api.ParameterLoad;
@@ -55,7 +56,7 @@ public final class ParameterManager {
             // 通过传入参数给生成的源文件中所有属性赋值
             iParameter.loadParameter(object);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.i(getClass().getSimpleName(), "loadParameter方法抛出异常");
         }
     }
 }
